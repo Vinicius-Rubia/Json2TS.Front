@@ -6,44 +6,47 @@ import { Check, Copy } from "lucide-react";
 import React, { useState } from "react";
 
 const defaultJsonValue = `{
-  "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "default",
-  "rsc": false,
-  "tsx": true,
-  "tailwind": {
-    "config": "tailwind.config.js",
-    "css": "src/assets/styles/main.css",
-    "baseColor": "neutral",
-    "cssVariables": true,
-    "prefix": ""
+  "projectName": "Json2TS",
+  "version": "1.0.0",
+  "description": "Uma ferramenta que converte JSON em tipos TypeScript, simplificando a documentação e a integração.",
+  "features": [
+    "Conversão automática de JSON para tipos TypeScript",
+    "Facilidade de uso com uma interface amigável",
+    "Suporte para copiar e colar tipos diretamente no seu código"
+  ],
+  "config": {
+    "defaultTheme": "dark",
+    "outputFormat": "typescript",
+    "includeExamples": true
   },
-  "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils"
-  }
-}`;
-
-const defaultTypescriptValue = `export interface Root {
-  $schema: string;
-  style: string;
-  rsc: boolean;
-  tsx: boolean;
-  tailwind: {
-    config: string;
-    css: string;
-    baseColor: string;
-    cssVariables: boolean;
-    prefix: string;
-  };
-  aliases: {
-    components: string;
-    utils: string;
-  }
-}`;
+  "observations": [
+    "No caso de um array onde um índice não tem as mesmas propriedades que os outros indíces, o código por padrão ira gerar a tipagem apenas para o primeiro índice identificado."
+  ],
+  "examples": [
+    {
+      "name": "Exemplo 01",
+      "json": {
+        "product": "Laptop",
+        "price": 999.99,
+        "inStock": true,
+        "tags": ["electronics", "computers"],
+        "manufacturer": {
+          "name": "TechCorp",
+          "address": {
+            "street": "456 Tech Rd",
+            "city": "Tech City",
+            "country": "Countryland"
+          }
+        }
+      }
+    }
+  ]
+}
+`;
 
 export const Json2TSConvert: React.FC = () => {
   const [jsonValue, setJsonValue] = useState<string | undefined>(defaultJsonValue);
-  const [typescriptCode, setTypescriptCode] = useState<string | undefined>(defaultTypescriptValue);
+  const [typescriptCode, setTypescriptCode] = useState<string | undefined>(`// Clique em "Convert Json2TS para gerar a tipagem do JSON`);
   const [copyCode, setCopyCode] = useState<boolean>(false);
 
   const copyTextToClipboard = () => {
