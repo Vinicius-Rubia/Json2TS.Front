@@ -48,7 +48,6 @@ export const Json2TSConvert: React.FC = () => {
   const [jsonValue, setJsonValue] = useState<string | undefined>(defaultJsonValue);
   const [typescriptCode, setTypescriptCode] = useState<string | undefined>(`// Clique em "Convert Json2TS para gerar a tipagem do JSON`);
   const [copyCode, setCopyCode] = useState<boolean>(false);
-
   const copyTextToClipboard = () => {
     navigator.clipboard.writeText(typescriptCode!);
     setCopyCode(true);
@@ -285,7 +284,7 @@ export const Json2TSConvert: React.FC = () => {
         <div>
           <Editor
             defaultLanguage="json"
-            defaultValue={jsonValue}
+            defaultValue={defaultJsonValue}
             className="h-[calc(100vh-80px)]"
             theme="CustomTheme"
             beforeMount={handleEditorDidMount}
@@ -294,6 +293,7 @@ export const Json2TSConvert: React.FC = () => {
               fontSize: 16,
               wordWrap: "on",
               tabSize: 2,
+              formatOnPaste: true,
               minimap: {
                 enabled: false,
               },
