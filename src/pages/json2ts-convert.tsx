@@ -1,74 +1,27 @@
-import { ModeToggle } from "@/components/mode-toggle";
+import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
-import JsonToTypescriptConverter from "@/utils/json-to-typescript-converter";
+import { defaultJsonValue } from "@/data";
+import { copyTextToClipboard } from "@/utils/copy-text-to-clipboard";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { Check, Copy } from "lucide-react";
 import React, { useState } from "react";
 
-const defaultJsonValue = `{
-  "projectName": "Json2TS",
-  "version": "1.0.0",
-  "description": "Uma ferramenta que converte JSON em tipos TypeScript, simplificando a documentação e a integração.",
-  "features": [
-    "Conversão automática de JSON para tipos TypeScript",
-    "Facilidade de uso com uma interface amigável",
-    "Suporte para copiar e colar tipos diretamente no seu código"
-  ],
-  "config": {
-    "defaultTheme": "dark",
-    "outputFormat": "typescript",
-    "includeExamples": true
-  },
-  "observations": [
-    "No caso de um array onde um índice não tem as mesmas propriedades que os outros indíces, o código por padrão ira gerar a tipagem apenas para o primeiro índice identificado."
-  ],
-  "examples": [
-    {
-      "name": "Exemplo 01",
-      "json": {
-        "product": "Laptop",
-        "price": 999.99,
-        "inStock": true,
-        "tags": ["electronics", "computers"],
-        "manufacturer": {
-          "name": "TechCorp",
-          "address": {
-            "street": "456 Tech Rd",
-            "city": "Tech City",
-            "country": "Countryland"
-          }
-        }
-      }
-    }
-  ]
-}
-`;
-
 export const Json2TSConvert: React.FC = () => {
-  const [jsonValue, setJsonValue] = useState<string | undefined>(defaultJsonValue);
-  const [typescriptCode, setTypescriptCode] = useState<string | undefined>(`// Clique em "Convert Json2TS para gerar a tipagem do JSON`);
+  const [jsonValue, setJsonValue] = useState<string>(defaultJsonValue);
+  const [typescriptCode, setTypescriptCode] = useState<string>('// Clique em "Convert Json2TS para gerar a tipagem do JSON');
   const [copyCode, setCopyCode] = useState<boolean>(false);
-  const copyTextToClipboard = () => {
-    navigator.clipboard.writeText(typescriptCode!);
+
+  const copyTSCode = () => {
+    copyTextToClipboard(typescriptCode);
     setCopyCode(true);
     setTimeout(() => {
       setCopyCode(false);
     }, 1000);
   }
-  
 
-  function handleEditorChange(value: string | undefined) {
+  const handleEditorChange = (value: string | undefined) => {
     if (value !== undefined) {
       setJsonValue(value);
-    }
-  }
-
-  function handleConvertJson2Ts() {
-    try {
-      const tsCode = JsonToTypescriptConverter.convert(jsonValue!);
-      setTypescriptCode(tsCode);
-    } catch (error) {
-      console.error('Invalid JSON', error);
     }
   }
 
@@ -269,17 +222,7 @@ export const Json2TSConvert: React.FC = () => {
 
   return (
     <div>
-      <header className="flex items-center justify-between h-20 bg-primary-foreground px-4">
-        <h1 className="font-semibold text-xl">Json2TS</h1>
-        <Button
-          variant="outline"
-          className="text-emerald-400 hover:bg-emerald-600"
-          onClick={handleConvertJson2Ts}
-        >
-          Convert Json2TS
-        </Button>
-        <ModeToggle />
-      </header>
+      <Header jsonValue={jsonValue} setTypescriptCode={setTypescriptCode} />
       <div className="grid grid-cols-2">
         <div>
           <Editor
@@ -304,7 +247,7 @@ export const Json2TSConvert: React.FC = () => {
           <Button
             variant="secondary"
             className="absolute right-10 top-4 z-10 size-8 p-2"
-            onClick={copyTextToClipboard}
+            onClick={copyTSCode}
           >
             {copyCode ? <Check className="text-emerald-400" /> : <Copy /> }
           </Button>
